@@ -161,7 +161,8 @@ console.log("begindate",beginDate)
  console.log("enddate",endDate)
 
       const condition={
-       ExpiredDate:{$gte: Date.parse(beginDate),$lte:Date.parse(endDate)},
+      ExpiredDate:{$gte: Date.parse(beginDate),$lte:Date.parse(endDate)}
+      // ExpiredDate:{$gte:beginDate,$lte:endDate}
        // ExpiredDate:{$gte: Date.parse("April 01, 2022"),$lte:Date.parse("April 12, 2022")}
       }
     //   var date =await moment("2016-01-23T22:23:32.927");
@@ -216,13 +217,14 @@ router.get('/get-product-updated',async(req,res)=>{
 
         
     //    const {beginDate,endDate}=req.query;
-      const createcondtion={
-        updatedAt:{$gte:beginDate,$lte:endDate}
-      
-       
+      const condtion={
+       // createdAt:{$in:[createdAt:{$ne:updatedAt}]}
+      // $eq:[this.updatedAt,this.createdAt]
+       //db.inventory.find( { "item.name": { $eq: "ab" } } )
+       $where:"this.createdAt.toString()!==this.updatedAt.toString()"
       }
 
-      const product=await Schema.find(createcondtion)
+      const product=await Schema.find(condtion)
        
      console.log("createdAt",product)
      if(product){
