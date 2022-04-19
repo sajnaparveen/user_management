@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const moment =require('moment');
 const { Admin } = require('mongodb');
 const schema=require('../model/usermodel');
-const {authdataSchema}= require("../validation/joischema");
+const {joischema}= require("../validation/joischema");
 
 
 router.post('/register',async(req,res)=>{
@@ -23,7 +23,7 @@ const password=req.body.password;
 console.log("username",userdetails);
 console.log("email",emailid);
 console.log("mobileno",phn);
-const newresult =  await  authdataSchema.validateAsync(req.body)
+const newresult =  await  joischema.validateAsync(req.body)
  if(userdetails){
     return res.json({status:"failure",message:"username already exist"})
   }else if(emailid){
@@ -85,7 +85,7 @@ router.post('/loginpage',async(req,res)=>{
                let userdetails=details.toObject()//to append jwt token
                let jwttoken = jwt.sign(payload, process.env.secretKey)
                userdetails.jwttoken = jwttoken
-               await userSchema.findOneAndUpdate({uuid: userdetails.uuid}, {loginStatus: true}, {new:true}).exec()
+               await schema.findOneAndUpdate({uuid: userdetails.uuid}, {loginStatus: true}, {new:true}).exec()
                 return res.status(200).json({status: "success", message: "Login successfully",data:{userdetails,jwttoken}})
             }else{
                 return res.status(200).json({status: "failure", message: "Login failed"})

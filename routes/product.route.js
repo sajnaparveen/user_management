@@ -5,6 +5,9 @@ const userSchema=require("../model/usermodel");
 const {authVerify, isAdmin} = require("../middleware/auth");
 const req = require('express/lib/request');
 const res = require('express/lib/response');
+const { schema } = require('../model/product.model');
+const { date } = require('joi');
+const moment=require('moment')
 //add
 router.post('/add',authVerify,async(req,res)=>{
     try{
@@ -73,15 +76,15 @@ router.delete("/delete/:product_uuid",authVerify, async(req,res)=>{
 router.get("/userbasedprdoucts",async(req,res)=>{
     try{
 let details=await userSchema.aggregate([
-    // {
-    //     $match:{
-    //         $and:[
-    //             {"uuid": req.query.user_uuid},
-    //             {"userUuid": req.query.userUuid},
+    {
+        $match:{
+            $and:[
+                {"uuid": req.query.user_uuid},
+                {"userUuid": req.query.userUuid},
                
-    //         ]
-    //     }
-    // },
+            ]
+        }
+    },
 {
     
     '$lookup':{
@@ -133,7 +136,7 @@ if(details.length>0){
 })
 router.post('/addCategory', isAdmin, async(req,res)=>{
     try{
-        const data = new userSchema(req.body);
+        const data = new category(req.body);
         const result = await data.save()
         return res.status(200).json({status: "success", message: 'category added successfully', result: result})
     }catch(error){
@@ -141,4 +144,38 @@ router.post('/addCategory', isAdmin, async(req,res)=>{
         return res.status(400).json({"status": 'failure', 'message': error.message})
     }
 })
+
+router.get('/get-product',async(req,res)=>{
+    try{
+
+      const {beginDate,endDate}=req.query;
+console.log("begindate",beginDate)
+ console.log("enddate",endDate)
+
+      const condition={
+       ExpiredDate:{$gte: Date.parse(beginDate),$lte:Date.parse(endDate)},
+       // ExpiredDate:{$gte: Date.parse("April 01, 2012"),$lte:Date.parse("April 12, 2012")}
+      }
+    //   var date =await moment("2016-01-23T22:23:32.927");
+    //   console.log("momentdate",date);
+      const createcondtion={
+        createdAt:{$gte:ISODate("2022-04-19T09:10:59.480Z"),$lte:ISODate("2022-04-19T09:10:59.480Z")}
+      }
+
+      const product=await Schema.find(createcondtion)
+       
+     console.log("productdate",product)
+     if(product){
+        return res.status(200).json({"status": 'true', 'message': product})
+     }else{
+        return res.status(400).json({"status": 'failure'})
+     }
+
+    }catch(error){
+        console.log(error.message);
+        return res.status(400).json({"status": 'failure', 'message': error.message})
+    }
+})
+
+
 module.exports = router;

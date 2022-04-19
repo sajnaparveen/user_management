@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const crypto=require('crypto');
+const { string } = require('joi');
 
 const schema = new mongoose.Schema({
     uuid : {type: String, required : false},
@@ -7,7 +8,6 @@ const schema = new mongoose.Schema({
     email:{type:String,required:true,trim:true,unique:true},
     mobilenumber:{type:String,required:true},
     password:{type:String,required:true},
-    //role:{type: String, enum:['admin', 'user'], required: false, default: 'user'},
     role:{type: String, enum:['admin', 'user'], required: false, default: 'admin'},
     lastedVisited: {type: String, required: false},
     loginStatus:{type: Boolean, required: false, default: false},

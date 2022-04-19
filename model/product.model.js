@@ -8,6 +8,8 @@ const productSchema = new mongoose.Schema({
     quantity:{type: Number, required: true},
     price:{type: String, required: true},
     brand:{type: String, required: true},
+    ExpiredDate:{type:Date,required:true},
+    mdf:{type:Date,required:true},
     userUuid: {type: String, required: true},
     categoryUuid:{type: String, required: true},
     
