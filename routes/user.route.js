@@ -3,10 +3,9 @@ const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment =require('moment');
 const { Admin } = require('mongodb');
-
-
-
 const schema=require('../model/usermodel');
+const {authdataSchema}= require("../validation/joischema");
+
 
 router.post('/register',async(req,res)=>{
 try{
@@ -17,12 +16,14 @@ const mobilenumber=req.body.mobilenumber;
 const password=req.body.password;
 
  if(username && email && mobilenumber && password){
+    
  let userdetails=await schema.findOne({'username':username}).exec()
  let emailid=await schema.findOne({'email':email}).exec()
  let phn=await schema.findOne({'mobilenumber':mobilenumber}).exec()
 console.log("username",userdetails);
 console.log("email",emailid);
 console.log("mobileno",phn);
+const newresult =  await  authdataSchema.validateAsync(req.body)
  if(userdetails){
     return res.json({status:"failure",message:"username already exist"})
   }else if(emailid){
@@ -30,12 +31,24 @@ console.log("mobileno",phn);
   }else if(phn){
     return res.json({status:"failure",message:"mobileno already exist"})
   }else{
+
+   
     let user=new schema(req.body);
     let salt = await bcrypt.genSalt(10);
     user.password = bcrypt.hashSync(password, salt);
     console.log(user.password);
     let result=await user.save();
     
+
+    // const authdataSchema = joi.object({
+    //     username:joi.string().pattern(new RegExp(/^[A-Za-z]+[0-9]{3}+$/)).min(4).max(20).required(),
+    //      email:joi.string().pattern(new RegExp(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)).required(),
+    //      mobilenumber:joi.string().length(10).pattern(new RegExp(/^[0-9]{10}+$/)).required(),
+    //      password:joi.string().min(3).required(),
+    // });
+    // let  result=authdataSchema.validate(req.body)
+    // res.send(result)
+
     return res.status(200).json({status:"success",message:"user details added  successfully",data:result})
   }
 }
@@ -69,9 +82,10 @@ router.post('/loginpage',async(req,res)=>{
             let payload = {uuid: userdetails.uuid,role:userdetails.role}
            // let payload = {uuid: userdetails.uuid,role:Admin}
             if(match){
-               let userdetails=details.toObject()
+               let userdetails=details.toObject()//to append jwt token
                let jwttoken = jwt.sign(payload, process.env.secretKey)
                userdetails.jwttoken = jwttoken
+               await userSchema.findOneAndUpdate({uuid: userdetails.uuid}, {loginStatus: true}, {new:true}).exec()
                 return res.status(200).json({status: "success", message: "Login successfully",data:{userdetails,jwttoken}})
             }else{
                 return res.status(200).json({status: "failure", message: "Login failed"})

@@ -73,7 +73,17 @@ router.delete("/delete/:product_uuid",authVerify, async(req,res)=>{
 router.get("/userbasedprdoucts",async(req,res)=>{
     try{
 let details=await userSchema.aggregate([
+    // {
+    //     $match:{
+    //         $and:[
+    //             {"uuid": req.query.user_uuid},
+    //             {"userUuid": req.query.userUuid},
+               
+    //         ]
+    //     }
+    // },
 {
+    
     '$lookup':{
         from:'products',
         localField: 'uuid',
@@ -93,7 +103,22 @@ let details=await userSchema.aggregate([
                 path:'$product_details',
                 preserveNullAndEmptyArrays:true
             }
-        }
+        },
+        {
+            '$unwind':{
+                path:'$category_details',
+                preserveNullAndEmptyArrays:true
+            }
+        },
+        {
+            $project: {
+                "_id": 0,
+                "username": 1,
+                "product_details.productName": 1,
+                "category_details.categoryName":1
+
+            }
+        } 
 ])
 console.log(details)
 if(details.length>0){
