@@ -6,8 +6,8 @@ const {authVerify, isAdmin} = require("../middleware/auth");
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { schema } = require('../model/product.model');
-const { date } = require('joi');
-const moment=require('moment')
+
+
 //add
 router.post('/add',authVerify,async(req,res)=>{
     try{
@@ -121,7 +121,15 @@ let details=await userSchema.aggregate([
                 "category_details.categoryName":1
 
             }
-        } 
+        },{
+            $sort:{
+                categoryName:1
+            }
+        },{
+            $skip:parseInt(req.query.skip)
+        },{
+            $limit:parseInt(req.query.limit)
+        }
 ])
 console.log(details)
 if(details.length>0){
@@ -145,7 +153,7 @@ router.post('/addCategory', isAdmin, async(req,res)=>{
     }
 })
 
-router.get('/get-product',async(req,res)=>{
+router.get('/get-product-expire',async(req,res)=>{ //get expired product details between startDate to endDate
     try{
 
       const {beginDate,endDate}=req.query;
@@ -154,15 +162,15 @@ console.log("begindate",beginDate)
 
       const condition={
        ExpiredDate:{$gte: Date.parse(beginDate),$lte:Date.parse(endDate)},
-       // ExpiredDate:{$gte: Date.parse("April 01, 2012"),$lte:Date.parse("April 12, 2012")}
+       // ExpiredDate:{$gte: Date.parse("April 01, 2022"),$lte:Date.parse("April 12, 2022")}
       }
     //   var date =await moment("2016-01-23T22:23:32.927");
     //   console.log("momentdate",date);
-      const createcondtion={
-        createdAt:{$gte:ISODate("2022-04-19T09:10:59.480Z"),$lte:ISODate("2022-04-19T09:10:59.480Z")}
-      }
+    //   const createcondtion={
+    //     createdAt:{$gte:"2022-04-19",$lte:"2022-04-19"}
+    //   }
 
-      const product=await Schema.find(createcondtion)
+      const product=await Schema.find(condition)
        
      console.log("productdate",product)
      if(product){
@@ -177,5 +185,56 @@ console.log("begindate",beginDate)
     }
 })
 
+router.get('/get-product-createdAt',async(req,res)=>{ //get startdate to enddate created products details 
+    try{
+
+        
+        const {beginDate,endDate}=req.query;
+      const createcondtion={
+        createdAt:{$gte:beginDate,$lte:endDate}
+       // createdAt:{$gte:"2022-04-19T02:00:00Z",$lte:"2022-04-30T02:00:00Z"}
+       
+      }
+
+      const product=await Schema.find(createcondtion)
+       
+     console.log("createdAt",product)
+     if(product){
+        return res.status(200).json({"status": 'true', 'message': product})
+     }else{
+        return res.status(400).json({"status": 'failure'})
+     }
+
+    }catch(error){
+        console.log(error.message);
+        return res.status(400).json({"status": 'failure', 'message': error.message})
+    }
+})
+
+router.get('/get-product-updated',async(req,res)=>{
+    try{
+
+        
+    //    const {beginDate,endDate}=req.query;
+      const createcondtion={
+        updatedAt:{$gte:beginDate,$lte:endDate}
+      
+       
+      }
+
+      const product=await Schema.find(createcondtion)
+       
+     console.log("createdAt",product)
+     if(product){
+        return res.status(200).json({"status": 'true', 'message': product})
+     }else{
+        return res.status(400).json({"status": 'failure'})
+     }
+
+    }catch(error){
+        console.log(error.message);
+        return res.status(400).json({"status": 'failure', 'message': error.message})
+    }
+})
 
 module.exports = router;
