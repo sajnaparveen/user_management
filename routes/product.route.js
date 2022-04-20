@@ -6,7 +6,7 @@ const {authVerify, isAdmin} = require("../middleware/auth");
 const req = require('express/lib/request');
 const res = require('express/lib/response');
 const { schema } = require('../model/product.model');
-
+const moment=require('moment')
 
 //add
 router.post('/add',authVerify,async(req,res)=>{
@@ -156,14 +156,16 @@ router.post('/addCategory', isAdmin, async(req,res)=>{
 router.get('/get-product-expire',async(req,res)=>{ //get expired product details between startDate to endDate
     try{
 
-      const {beginDate,endDate}=req.query;
-console.log("begindate",beginDate)
- console.log("enddate",endDate)
-
+const {beginDate,endDate}=req.query;
+console.log("begindate1",beginDate)
+console.log("enddate1",endDate)
+ //begindate1=moment(beginDate).startOf('day').toString()
+ //endDate1=moment(endDate).endOf('day').toString()
       const condition={
-      ExpiredDate:{$gte: Date.parse(beginDate),$lte:Date.parse(endDate)}
+     // ExpiredDate:{$gte:beginDate,$lte:endDate}
       // ExpiredDate:{$gte:beginDate,$lte:endDate}
        // ExpiredDate:{$gte: Date.parse("April 01, 2022"),$lte:Date.parse("April 12, 2022")}
+       ExpiredDate:{$gte:moment(beginDate).format('DD-MM-YYYY'),$lte:moment(endDate).format('DD-MM-YYYY')} 
       }
     //   var date =await moment("2016-01-23T22:23:32.927");
     //   console.log("momentdate",date);
