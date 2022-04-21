@@ -165,14 +165,14 @@ console.log("enddate1",endDate)
      // ExpiredDate:{$gte:beginDate,$lte:endDate}
       // ExpiredDate:{$gte:beginDate,$lte:endDate}
        // ExpiredDate:{$gte: Date.parse("April 01, 2022"),$lte:Date.parse("April 12, 2022")}
-       ExpiredDate:{$gte:moment(beginDate).format('DD-MM-YYYY'),$lte:moment(endDate).format('DD-MM-YYYY')} 
+       ExpiredDate:{$gte:moment(beginDate).format('YYYY-MM-DD'),$lte:moment(endDate).format('YYYY-MM-DD')} 
       }
     //   var date =await moment("2016-01-23T22:23:32.927");
     //   console.log("momentdate",date);
     //   const createcondtion={
     //     createdAt:{$gte:"2022-04-19",$lte:"2022-04-19"}
     //   }
-
+    
       const product=await Schema.find(condition)
        
      console.log("productdate",product)
@@ -194,8 +194,8 @@ router.get('/get-product-createdAt',async(req,res)=>{ //get startdate to enddate
         
         const {beginDate,endDate}=req.query;
       const createcondtion={
-        createdAt:{$gte:beginDate,$lte:endDate}
-       // createdAt:{$gte:"2022-04-19T02:00:00Z",$lte:"2022-04-30T02:00:00Z"}
+       // createdAt:{$gte:beginDate,$lte:endDate}
+        createdAt:{$gte: moment(beginDate).format('YYYY-MM-DDT23:59:59.000Z'),$lte:moment(endDate).format('YYYY-MM-DDT23:59:59.000Z')}
        
       }
 

@@ -7,6 +7,7 @@ const port=process.env.port || 8000;
 
 const productRouter = require('./routes/product.route');
 const userrouter=require('./routes/user.route');
+const orderproduct=require('./routes/order.route')
 
 
 const app=express();
@@ -27,7 +28,8 @@ mongoose.connect(process.env.dburl,{
 app.use(express.json());
 
 app.use('/api/v1/user',userrouter); 
-app.use('/api/v2/product/', productRouter);                                              
+app.use('/api/v2/product/', productRouter);
+app.use('/api/v3/order/',orderproduct);                                              
 
 app.listen(port, ()=>{
     console.log(`http://127.0.0.1:${port}`)

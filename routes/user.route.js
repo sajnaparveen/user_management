@@ -5,11 +5,57 @@ const moment =require('moment');
 const { Admin } = require('mongodb');
 const schema=require('../model/usermodel');
 const {joischema}= require("../validation/joischema");
+//const mailsending=
+//const nodemailer = require('nodemailer')
+// const mail = nodemailer.createTransport({
+//     "service":"gamil",
+//     "auth":{
+//         user:'sajnaparveen97@gmail.com',
+//         pass:'Sajna@97'
+//     }                               
+// })
+
+// const sendMail = () =>{
+//     let mailData = {
+//         from: "sajnaparveen97@gmail.com",
+//         to: "sajna.platosys@gmail.com",
+//         subject: "Hi Sajna",
+//         text: "test mail"
+//     }
+//     mail.sendMail(mailData, function(err,data){
+//         if(err){
+//             console.log("err",err)
+//         }else{
+//             console.log("mail send achu!")
+//         }
+//     })
+// }
+
+
+
+// const sgMail = require('@sendgrid/mail')
 
 
 router.post('/register',async(req,res)=>{
 try{
-
+  // await sendMail()
+    // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    // const msg = {
+    //   to: 'sajna.platosys@gmail.com', // Change to your recipient
+    //   from: 'sajnaparveen97@gmail.com', // Change to your verified sender
+    //   subject: 'About Sajna',
+    //   text: 'test mail',
+    //   html: '<strong>test mail </strong>',
+    // }
+    // sgMail
+    //   .send(msg)
+    //   .then(() => {
+    //     console.log('Email sent')
+    //   })
+    //   .catch((error) => {
+    //     console.error(error)
+    //   })
+    
 const username=req.body.username;
 const email=req.body.email;
 const mobilenumber=req.body.mobilenumber;
@@ -37,6 +83,8 @@ const newresult =  await  joischema.validateAsync(req.body)
     let salt = await bcrypt.genSalt(10);
     user.password = bcrypt.hashSync(password, salt);
     console.log(user.password);
+
+    
     let result=await user.save();
     
 
