@@ -5,6 +5,7 @@ const moment =require('moment');
 const { Admin } = require('mongodb');
 const schema=require('../model/usermodel');
 const {joischema}= require("../validation/joischema");
+const {mailsending}=require("../middleware/mailer");
 //const mailsending=
 //const nodemailer = require('nodemailer')
 // const mail = nodemailer.createTransport({
@@ -38,29 +39,18 @@ const {joischema}= require("../validation/joischema");
 
 router.post('/register',async(req,res)=>{
 try{
-  // await sendMail()
-    // sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-    // const msg = {
-    //   to: 'sajna.platosys@gmail.com', // Change to your recipient
-    //   from: 'sajnaparveen97@gmail.com', // Change to your verified sender
-    //   subject: 'About Sajna',
-    //   text: 'test mail',
-    //   html: '<strong>test mail </strong>',
-    // }
-    // sgMail
-    //   .send(msg)
-    //   .then(() => {
-    //     console.log('Email sent')
-    //   })
-    //   .catch((error) => {
-    //     console.error(error)
-    //   })
-    
+ // await mailsending()
+  
 const username=req.body.username;
 const email=req.body.email;
 const mobilenumber=req.body.mobilenumber;
 const password=req.body.password;
-
+const mailData = {
+    to: email, 
+      subject:'Verify Email', 
+      text: '', 
+      html: '<div><h2>Welcome to Snowbell Infotech</h2></br><p>click the link and verify your email id<p/></br><a href="https://snowbelltech.com/">VERIFY EMAIL HERE!</a></div>', 
+  }
  if(username && email && mobilenumber && password){
     
  let userdetails=await schema.findOne({'username':username}).exec()
@@ -78,15 +68,21 @@ const newresult =  await  joischema.validateAsync(req.body)
     return res.json({status:"failure",message:"mobileno already exist"})
   }else{
 
+    let mailRes = mailsending(mailData)
+    if(!mailRes){
+        console.log("Please Verify your account... chech your email right now!")
+        // return res.status(200).json({status:"success",message:"user details added  successfully",data:result})
+    }else{
+      console.log("gftygvkiikjbjgigh")
+      let user=new schema(req.body);
+      let salt = await bcrypt.genSalt(10);
+      user.password = bcrypt.hashSync(password, salt);
+      console.log(user.password);
+      let result=await user.save();
+      console.log("result",result)
+      return res.status(200).json({status:"success",message:"user details added  successfully"})
+    }
    
-    let user=new schema(req.body);
-    let salt = await bcrypt.genSalt(10);
-    user.password = bcrypt.hashSync(password, salt);
-    console.log(user.password);
-
-    
-    let result=await user.save();
-    
 
     // const authdataSchema = joi.object({
     //     username:joi.string().pattern(new RegExp(/^[A-Za-z]+[0-9]{3}+$/)).min(4).max(20).required(),
@@ -96,8 +92,6 @@ const newresult =  await  joischema.validateAsync(req.body)
     // });
     // let  result=authdataSchema.validate(req.body)
     // res.send(result)
-
-    return res.status(200).json({status:"success",message:"user details added  successfully",data:result})
   }
 }
  else{

@@ -79,8 +79,8 @@ let details=await userSchema.aggregate([
     {
         $match:{
             $and:[
-                {"uuid": req.query.user_uuid},
-                {"userUuid": req.query.userUuid},
+              // {"uuid": req.query.user_uuid},
+                {"userUuid": req.query.userUuid}
                
             ]
         }
@@ -101,7 +101,8 @@ let details=await userSchema.aggregate([
                 foreignField:'userUuid',
                 as:'category_details'
             }  
-        },{
+        },
+        {
             '$unwind':{
                 path:'$product_details',
                 preserveNullAndEmptyArrays:true
@@ -121,14 +122,6 @@ let details=await userSchema.aggregate([
                 "category_details.categoryName":1
 
             }
-        },{
-            $sort:{
-                categoryName:1
-            }
-        },{
-            $skip:parseInt(req.query.skip)
-        },{
-            $limit:parseInt(req.query.limit)
         }
 ])
 console.log(details)
@@ -175,9 +168,26 @@ console.log("enddate1",endDate)
     
       const product=await Schema.find(condition)
        
+      let details=await category.aggregate([
+        {
+            $match:{
+                $and:[
+                    {"uuid": req.query.user_uuid},
+                    {"userUuid": req.query.userUuid},
+                   
+                ]
+            }
+        }
+
+
+      ])
+
+
+
+
      console.log("productdate",product)
      if(product){
-        return res.status(200).json({"status": 'true', 'message': product})
+        return res.status(200).json({"status": 'true', 'message': "fetched succussfully",result:product  })
      }else{
         return res.status(400).json({"status": 'failure'})
      }

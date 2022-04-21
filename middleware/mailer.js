@@ -1,47 +1,27 @@
-const mail = require('@sendgrid/mail');
-const nodemailer=require('nodemailer');
-const router = require('../routes/user.route');
-const { route } = require('../routes/user.route');
+const nodemailer = require("nodemailer");
 
-const transport=nodemailer.createTransport({
-    port:465,
-    host:"",
-    auth:{
-        user:"sajna.platosys@gmail.com",
-        pass:"Musthi@97"
-    }
-});
+async function mail(mailData) {
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    port: 587,
+    secure: false, 
+    auth: {
+      user: 'snowbellplanet@gmail.com',
+      pass: 'Snowbell@2022', 
+    },
+  });
+  let info = await transporter.sendMail({
+    from: '"support@snowbellinfotech" <snowbellplanet@gmail.com>', 
+    to: mailData.to, 
+    subject: mailData.subject, 
+    text: mailData.text, 
+    html: mailData.html, 
+  });
 
-async function mailsending(mailData){
-    try{
-        transport.sendMail(mailData,(err,data)=>{
-            if(err){
-                console.log("err",err.message)
-            }
-        })
-    }catch(error){
-        console.log(error.message)
-        process.exit(1);
-    }
+  console.log("Message sent:", info.messageId);
+
 }
 
-router.post("/mail",async(req,res)=>{
-    try{
-      const tomail=req.body.tomail;
-      const subject=req.body.subject;
-      const text=req.body.text;
-      const mailData={
-          from:"sajnaparveen97@gmail.com",
-          to:tomail,
-          subject: subject,
-          text:text
-
-      }
-    }catch(error){
-
-    }
-})
-
 module.exports={
-    mailsending:mailsending
+    mailsending:mail
 }

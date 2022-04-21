@@ -10,8 +10,6 @@ const schema = new mongoose.Schema({
 {
     timestamps:true
 });
-
-
 schema.pre('save',function(next){
     this.uuid='CATE-'+crypto.pseudoRandomBytes(5).toString('hex').toUpperCase()
     console.log(this.uuid)
