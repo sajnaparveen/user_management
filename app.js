@@ -4,7 +4,7 @@ const mongoose=require('mongoose')
 require('dotenv').config();
 //const expresslayout=require('express-ejs-layouts')
 
-const port=process.env.port || 8000;
+const port=process.env.port || 8000;                     //testing 
 
 const productRouter = require('./routes/product.route');
 const userrouter=require('./routes/user.route');
