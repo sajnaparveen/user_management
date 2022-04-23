@@ -29,6 +29,8 @@ mongoose.connect(process.env.dburl,{
 
 
 app.use(express.json());
+app.use(express.json());
+app.set('view engine', 'ejs')
 
 app.use('/api/v1/user',userrouter); 
 app.use('/api/v2/product/', productRouter);

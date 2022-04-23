@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Schema = require("../model/product.model");
 const category=require("../model/category.model");
-const userSchema=require("../model/usermodel");
+const userSchema=require("../model/usermodel");                      //testing
 const {authVerify, isAdmin} = require("../middleware/auth");
 const req = require('express/lib/request');
 const res = require('express/lib/response');
