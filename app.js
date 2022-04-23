@@ -2,6 +2,7 @@ const express=require('express')
 const cors=require('cors')
 const mongoose=require('mongoose')
 require('dotenv').config();
+//const expresslayout=require('express-ejs-layouts')
 
 const port=process.env.port || 8000;
 
@@ -12,6 +13,8 @@ const orderproduct=require('./routes/order.route')
 
 const app=express();
 app.use(cors());
+
+
 
 //mongodb con
 mongoose.connect(process.env.dburl,{

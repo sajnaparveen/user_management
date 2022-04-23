@@ -79,8 +79,8 @@ let details=await userSchema.aggregate([
     {
         $match:{
             $and:[
-              // {"uuid": req.query.user_uuid},
-                {"userUuid": req.query.userUuid}
+            //  {"categoryUuid": req.query.categoryUuid},
+              {"uuid": req.query.userUuid}
                
             ]
         }

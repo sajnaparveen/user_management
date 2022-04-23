@@ -6,6 +6,9 @@ const { Admin } = require('mongodb');
 const schema=require('../model/usermodel');
 const {joischema}= require("../validation/joischema");
 const {mailsending}=require("../middleware/mailer");
+
+
+//const emailverify=require('../templates/emailverification.ejs');
 //const mailsending=
 //const nodemailer = require('nodemailer')
 // const mail = nodemailer.createTransport({
@@ -70,10 +73,10 @@ const newresult =  await  joischema.validateAsync(req.body)
 
     let mailRes = mailsending(mailData)
     if(!mailRes){
-        console.log("Please Verify your account... chech your email right now!")
+        console.log("mail not sending")
         // return res.status(200).json({status:"success",message:"user details added  successfully",data:result})
     }else{
-      console.log("gftygvkiikjbjgigh")
+     
       let user=new schema(req.body);
       let salt = await bcrypt.genSalt(10);
       user.password = bcrypt.hashSync(password, salt);
@@ -153,5 +156,11 @@ router.post("/logout/:uuid",async(req,res)=>{
         console.log(error.message)
         return res.status(500).json({status: "failure", message: error.message})
     }
+})
+
+
+router.post("/logout/:uuid",async(req,res)=>{
+
+
 })
 module.exports = router;
