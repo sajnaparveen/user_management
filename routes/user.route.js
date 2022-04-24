@@ -50,15 +50,17 @@ router.post('/register', async (req, res) => {
         const mobilenumber = req.body.mobilenumber;
         const password = req.body.password;
         const mailData = {
-            to: email, 
-              subject:'Verify Email', 
-              text: '', 
-              fileName: 'emailverification.ejs',
-              details: {
-                name: "sajna",
-                date: new Date(),
-                link: "https://snowbelltech.com/"
-            }          }
+            to: email,
+            subject: "Verify Email",
+            text: "",
+            fileName: "emailverification.ejs",
+            details: {
+              name: username,
+              date: new Date(),
+            //  link: `http://${results.en0}:${port}/api/v1/user/email-verify?email=${email}`
+               link: `http://localhost:${port}/api/v1/user/email-verify?email=${email}`
+            }
+          };
        
         if (username && email && mobilenumber && password) {
 
@@ -69,6 +71,7 @@ router.post('/register', async (req, res) => {
             console.log("email", emailid);
             console.log("mobileno", phn);
             const newresult = await joischema.validateAsync(req.body)
+
             if (userdetails) {
                 return res.json({ status: "failure", message: "username already exist" })
             } else if (emailid) {
@@ -111,6 +114,29 @@ router.post('/register', async (req, res) => {
         return res.status(500).json({ status: "failure", message: error.message })
     }
 })
+
+
+router.get("/email-verify", async (req, res) => {
+    try {
+      const data = await schema.findOne({ email:req.query.email }).exec();
+      console.log("data",data)
+      if (data) {
+            if(data.verifyed){
+              console.log("true")
+              res.render('verify.ejs',{userName: data.username,email: data.email,title: "Your Account Already Verified!"})
+            }else{
+              console.log("false")
+              schema.updateOne({ email: req.query.email }, { verifyed: true }).exec();
+              res.render('verify.ejs',{userName: data.username,email: data.email,title: "Your Account Verified Successfully!"})
+            }
+          } else {
+            res.render('verify.ejs',{userName: data.username,email: data.email,title: "Account Verification Failed!"})
+          }
+    } catch (error) {
+      console.log("email-verify", error);
+    }
+  });
+
 //login
 router.post('/loginpage', async (req, res) => {
     try {
@@ -118,6 +144,12 @@ router.post('/loginpage', async (req, res) => {
         let password = req.body.password;
         let userdetails;
         let details = await schema.findOne({ username: username }).select('-username -_id ').exec()
+        if(!details.verifyed){
+            return res.status(400).json({
+              status: "failure",
+              message: "Your accout is not verified, Please verify your account",
+            });
+          }else{
         if (username) {
             userdetails = await schema.findOne({ username: username }).exec()
             if (!userdetails) {
@@ -143,7 +175,7 @@ router.post('/loginpage', async (req, res) => {
                 }
             }
         }
-
+    }
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({ status: "failure", message: error.message })
