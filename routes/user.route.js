@@ -7,7 +7,7 @@ const schema = require('../model/usermodel');
 const { joischema } = require("../validation/joischema");
 const { mailsending } = require("../middleware/mailer");
 const mail = require('@sendgrid/mail');
-
+const port = process.env.port || 8080;
 
 //const emailverify=require('../templates/emailverification.ejs');
 //const mailsending=
