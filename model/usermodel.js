@@ -11,7 +11,8 @@ const schema = new mongoose.Schema({
     role:{type: String, enum:['admin', 'user'], required: false, default: 'admin'},
     lastedVisited: {type: String, required: false},
     loginStatus:{type: Boolean, required: false, default: false},
-    firstLoginStatus:{type: Boolean, required: false, default: false}
+    firstLoginStatus:{type: Boolean, required: false, default: false},
+    verifyed: { type: Boolean, required: false, default: false }
 },{
     timestamps:true
 })

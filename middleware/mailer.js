@@ -19,6 +19,7 @@ const data=await ejs.renderFile(join(__dirname,'../templates/',mailData.fileName
     to: mailData.to, 
     subject: mailData.subject, 
     text: mailData.text, 
+    attachments: mailData.attachments,
     html: data, 
 
   });
