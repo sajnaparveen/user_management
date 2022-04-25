@@ -10,6 +10,7 @@ const mail = require("@sendgrid/mail");
 const path = require("path");
 const port = process.env.port || 8000;
 const fs=require("fs")
+const {join} = require('path');
 // get local ip address for mobile view
 // const { networkInterfaces } = require('os');
 
@@ -73,13 +74,24 @@ router.post("/register", async (req, res) => {
       subject: "Verify Email",
       text: "",
       fileName: "emailverification.ejs",
-      attachments: [
-        {
-        filename:  "snow.pdf",
-        filePath:'../files/snow.pdf'
+      attachments: 
+       [ {
+        filename:  "snow.jpeg",
+        path:(join(__dirname,'../files/snow.jpeg'))
       
-        }
-        ],
+        },
+        {
+          filename:  "java_tutorial.pdf",
+          path:(join(__dirname,'../files/java_tutorial.pdf'))
+        
+          },
+          {
+            filename:  "sample.doc",
+            path:(join(__dirname,'../files/sample.doc'))
+          
+            }
+      ],
+        
     // attachments:[ { fileName: "snow.jpg", streamSource: fs.createReadStream('../files/snow.jpeg') } ],
       details: {
         name: username,
