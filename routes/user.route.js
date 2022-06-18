@@ -18,7 +18,6 @@ const {join} = require('path');
 // https://github.com/sendgrid/sendgrid-nodejs
 // javascript
 // const sgMail = require('@sendgrid/mail')
-// sgMail.setApiKey('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')
 // const msg = {
 //   to: 'balachandiran1324@gmail.com', // Change to your recipient
 //   from: 'sajna.platosys@example.com', // Change to your verified sender
