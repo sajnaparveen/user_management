@@ -11,6 +11,30 @@ const path = require("path");
 const port = process.env.port || 8000;
 const fs=require("fs")
 const {join} = require('path');
+
+
+
+// using Twilio SendGrid's v3 Node.js Library
+// https://github.com/sendgrid/sendgrid-nodejs
+// javascript
+// const sgMail = require('@sendgrid/mail')
+// sgMail.setApiKey('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')
+// const msg = {
+//   to: 'balachandiran1324@gmail.com', // Change to your recipient
+//   from: 'sajna.platosys@example.com', // Change to your verified sender
+//   subject: 'Sending with SendGrid is Fun',
+//   text: 'and easy to do anywhere, even with Node.js',
+//   html: '<strong>and easy to do anywhere, even with Node.js</strong>',
+// }
+// sgMail
+//   .send(msg)
+//   .then(() => {
+//     console.log('Email sent')
+//   })
+//   .catch((error) => {
+//     console.error(error)
+//   })
+
 // get local ip address for mobile view
 // const { networkInterfaces } = require('os');
 

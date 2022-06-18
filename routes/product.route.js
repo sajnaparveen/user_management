@@ -37,7 +37,7 @@ router.get("/get",authVerify, async(req,res)=>{
     }
 });
 
-// update 
+// update                                                                                                     
 router.put("/update",authVerify, async(req,res)=>{
     try {
         let condition = {"uuid": req.body.uuid}
@@ -128,11 +128,11 @@ console.log(details)
 if(details.length>0){
     return res.status(200).json({'status': 'success', message: "Product details fetched successfully", 'result': details});
 }else{
-    return res.status(404).json({'status': 'failure', message: "product details not available"})
+    return res.status(200).json({'status': 'failure', message: "product details not available"})
 }
     }catch(error){
         console.log(error.message);
-        return res.status(400).json({"status": 'failure', 'message': error.message})
+        return res.status(500).json({"status": 'failure', 'message': error.message})
     }
 })
 router.post('/addCategory', isAdmin, async(req,res)=>{
@@ -168,19 +168,19 @@ console.log("enddate1",endDate)
     
       const product=await Schema.find(condition)
        
-      let details=await category.aggregate([
-        {
-            $match:{
-                $and:[
-                    {"uuid": req.query.user_uuid},
-                    {"userUuid": req.query.userUuid},
+    //   let details=await category.aggregate([
+    //     {
+    //         $match:{
+    //             $and:[
+    //                 {"uuid": req.query.user_uuid},
+    //                 {"userUuid": req.query.userUuid},
                    
-                ]
-            }
-        }
+    //             ]
+    //         }
+    //     }
 
 
-      ])
+    //   ])
 
 
 
@@ -220,7 +220,7 @@ router.get('/get-product-createdAt',async(req,res)=>{ //get startdate to enddate
 
     }catch(error){
         console.log(error.message);
-        return res.status(400).json({"status": 'failure', 'message': error.message})
+        return res.status(500).json({"status": 'failure', 'message': error.message})
     }
 })
 
